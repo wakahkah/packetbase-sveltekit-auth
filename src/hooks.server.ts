@@ -1,7 +1,7 @@
 import { pb } from "$lib/pocketbase";
 import type { Handle } from "@sveltejs/kit";
 
-export const handler: Handle = async({event, resolve}) => {
+export const handle: Handle = async({event, resolve}) => {
     //before
     pb.authStore.loadFromCookie(event.request.headers.get('cookie') || '');
     if (pb.authStore.isValid) {
