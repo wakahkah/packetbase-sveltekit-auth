@@ -1,5 +1,7 @@
 <script>
+	import { applyAction, enhance } from '$app/forms';
 	import '../app.postcss';
+	import { currentUser, pb } from '$lib/pocketbase';
 </script>
 
 <div class="bg-neutral text-neutral-content">
@@ -9,8 +11,26 @@
 		</div>
 		<div class="navbar-end">
 			<ul class="menu menu-horizontal">
-				<li><a href="/login" />Login</li>
-				<li><a href="/register" />Register</li>
+				{#if $currentUser}
+					<li><a href="/">{$currentUser.email}</a></li>
+					<li>
+						<form
+							method="POST"
+							action="/logout"
+							use:enhance={() => {
+								return async ({ result }) => {
+									pb.authStore.clear();
+									await applyAction(result);
+								};
+							}}
+						>
+							<button>Logout</button>
+						</form>
+					</li>
+				{:else}
+					<li><a href="/login">Login</a></li>
+					<li><a href="/register">Register</a></li>
+				{/if}
 			</ul>
 		</div>
 	</div>
